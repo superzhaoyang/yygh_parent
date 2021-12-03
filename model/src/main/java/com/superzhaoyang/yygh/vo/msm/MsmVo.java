@@ -4,7 +4,6 @@ import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 
-import java.io.Serializable;
 import java.util.Map;
 
 @Data
@@ -18,5 +17,5 @@ public class MsmVo {
     private String templateCode;
 
     @ApiModelProperty(value = "短信模板参数")
-    private Map<String,Object> param;
+    private Map<String, Object> param;
 }

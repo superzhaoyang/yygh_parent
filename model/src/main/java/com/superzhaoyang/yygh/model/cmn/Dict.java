@@ -1,7 +1,8 @@
 package com.superzhaoyang.yygh.model.cmn;
 
-import com.superzhaoyang.yygh.model.base.BaseEntity;
-import com.baomidou.mybatisplus.annotation.*;
+import com.baomidou.mybatisplus.annotation.TableField;
+import com.baomidou.mybatisplus.annotation.TableLogic;
+import com.baomidou.mybatisplus.annotation.TableName;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
@@ -44,7 +45,7 @@ public class Dict {
 
     @ApiModelProperty(value = "其他参数")
     @TableField(exist = false)
-    private Map<String,Object> param = new HashMap<>();
+    private Map<String, Object> param = new HashMap<>();
 
     @ApiModelProperty(value = "上级id")
     @TableField("parent_id")

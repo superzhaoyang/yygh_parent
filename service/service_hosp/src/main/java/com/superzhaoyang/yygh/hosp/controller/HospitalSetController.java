@@ -1,7 +1,6 @@
 package com.superzhaoyang.yygh.hosp.controller;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
-import com.baomidou.mybatisplus.extension.api.R;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.superzhaoyang.yygh.common.result.Result;
 import com.superzhaoyang.yygh.common.utils.MD5;
@@ -10,17 +9,16 @@ import com.superzhaoyang.yygh.model.hosp.HospitalSet;
 import com.superzhaoyang.yygh.vo.hosp.HospitalSetQueryVo;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
-import lombok.val;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
 
-import javax.management.Query;
 import java.util.List;
 import java.util.Random;
 
 @Api(tags = "医院设置管理")
 @RestController
+@CrossOrigin
 @RequestMapping("/admin/hosp/hospitalSet")
 public class HospitalSetController {
     //注入service
@@ -84,7 +82,7 @@ public class HospitalSetController {
         hospitalSet.setStatus(1);
         //签名密钥
         Random random = new Random();
-        hospitalSet.setSignKey(MD5.encrypt(System.currentTimeMillis()+""+ random.nextInt(1000)));
+        hospitalSet.setSignKey(MD5.encrypt(System.currentTimeMillis() + "" + random.nextInt(1000)));
         //调用service
         boolean save = hospitalSetService.save(hospitalSet);
         if (save) {
@@ -96,7 +94,7 @@ public class HospitalSetController {
 
     // 5 根据id获取医院设置
     @ApiOperation("根据id获取医院设置")
-    @GetMapping("getHospSet/{id}")
+    @GetMapping("getHospitalSet/{id}")
     public Result getHospSet(@PathVariable Long id) {
         HospitalSet hospitalSet = hospitalSetService.getById(id);
         return Result.ok(hospitalSet);
