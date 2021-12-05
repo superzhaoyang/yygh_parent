@@ -5,20 +5,25 @@ import com.superzhaoyang.yygh.hosp.repository.DepartmentRepository;
 import com.superzhaoyang.yygh.hosp.service.DepartmentService;
 import com.superzhaoyang.yygh.model.hosp.Department;
 import com.superzhaoyang.yygh.vo.hosp.DepartmentQueryVo;
+import com.superzhaoyang.yygh.vo.hosp.DepartmentVo;
+import lombok.val;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.*;
 import org.springframework.stereotype.Service;
 
-
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 @Service
 public class DepartmentServiceImpl implements DepartmentService {
 
     @Autowired
     private DepartmentRepository departmentRepository;
+
 
     // 上传科室接口
     @Override
@@ -27,7 +32,7 @@ public class DepartmentServiceImpl implements DepartmentService {
         String paramMapString = JSONObject.toJSONString(paramMap);
         Department department = JSONObject.parseObject(paramMapString, Department.class);
 
-        Department departmentExist =  departmentRepository.
+        Department departmentExist = departmentRepository.
                 getDepartmentByHoscodeAndDepcode(department.getHoscode(), department.getDepcode());
 
         // 根据医院编号和科室编号查询
@@ -48,7 +53,7 @@ public class DepartmentServiceImpl implements DepartmentService {
     public Page<Department> selectPage(Integer page, Integer limit, DepartmentQueryVo departmentQueryVo) {
         Sort sort = Sort.by(Sort.Direction.DESC, "createTime");
         //0为第一页
-        Pageable pageable = PageRequest.of(page-1, limit, sort);
+        Pageable pageable = PageRequest.of(page - 1, limit, sort);
 
         Department department = new Department();
         BeanUtils.copyProperties(departmentQueryVo, department);
@@ -73,5 +78,50 @@ public class DepartmentServiceImpl implements DepartmentService {
             departmentRepository.deleteById(department.getId());
         }
     }
+
+    @Override
+    public List<DepartmentVo> findDeptTree(String hoscode) {
+        // 创建list集合，用于最终数据封装
+        List<DepartmentVo> result = new ArrayList<>();
+        // 根据医院编号，查询医院所有科室信息
+        Department departmentQuery = new Department();
+        departmentQuery.setHoscode(hoscode);
+        Example example = Example.of(departmentQuery);
+        // 所有科室列表信息 departmentList
+        List<Department> departmentList = departmentRepository.findAll(example);
+        Map<String, List<Department>> departmentMap = departmentList.stream().
+                collect(Collectors.groupingBy(Department::getBigcode));
+
+        // 遍历map集合 departmentMap
+        for (Map.Entry<String, List<Department>> entry : departmentMap.entrySet()) {
+            // 大科室编号
+            String bigCode = entry.getKey();
+            //
+            List<Department> departmentLists = entry.getValue();
+
+            // 封装大科室
+            DepartmentVo departmentVo = new DepartmentVo();
+            departmentVo.setDepcode(bigCode);
+            departmentVo.setDepname(departmentLists.get(0).getBigname());
+            // 封装小科室
+
+            List<DepartmentVo> children = new ArrayList<>();
+            for (Department department : departmentLists) {
+                DepartmentVo departmentVo2 = new DepartmentVo();
+                departmentVo2.setDepcode(department.getDepcode());
+                departmentVo2.setDepname(department.getDepname());
+                // 封装到list集合
+                children.add(departmentVo2);
+            }
+
+            //把小科室list集合封装到大科室children里面
+            departmentVo.setChildren(children);
+            result.add(departmentVo);
+        }
+
+        return result;
+
+    }
+
 
 }
