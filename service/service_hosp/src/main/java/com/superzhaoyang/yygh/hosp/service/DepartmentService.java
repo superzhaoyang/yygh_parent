@@ -1,10 +1,8 @@
 package com.superzhaoyang.yygh.hosp.service;
 
 import com.superzhaoyang.yygh.model.hosp.Department;
-import com.superzhaoyang.yygh.model.hosp.Schedule;
 import com.superzhaoyang.yygh.vo.hosp.DepartmentQueryVo;
 import com.superzhaoyang.yygh.vo.hosp.DepartmentVo;
-import com.superzhaoyang.yygh.vo.hosp.ScheduleQueryVo;
 import org.springframework.data.domain.Page;
 
 import java.util.List;
@@ -19,6 +17,7 @@ public interface DepartmentService {
     //删除科室接口
     void remove(String hoscode, String depcode);
 
-
     List<DepartmentVo> findDeptTree(String hoscode);
+
+    String getDepName(String hoscode, String depcode);
 }

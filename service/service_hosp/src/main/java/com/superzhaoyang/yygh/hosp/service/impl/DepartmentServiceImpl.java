@@ -6,7 +6,6 @@ import com.superzhaoyang.yygh.hosp.service.DepartmentService;
 import com.superzhaoyang.yygh.model.hosp.Department;
 import com.superzhaoyang.yygh.vo.hosp.DepartmentQueryVo;
 import com.superzhaoyang.yygh.vo.hosp.DepartmentVo;
-import lombok.val;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.*;
@@ -23,7 +22,6 @@ public class DepartmentServiceImpl implements DepartmentService {
 
     @Autowired
     private DepartmentRepository departmentRepository;
-
 
     // 上传科室接口
     @Override
@@ -121,6 +119,16 @@ public class DepartmentServiceImpl implements DepartmentService {
 
         return result;
 
+    }
+
+    @Override
+    public String getDepName(String hoscode, String depcode) {
+        Department department = departmentRepository.getDepartmentByHoscodeAndDepcode(hoscode, depcode);
+        if (department != null) {
+            return department.getDepname();
+        }
+
+        return null;
     }
 
 
