@@ -66,7 +66,7 @@ public class HospitalServiceImpl implements HospitalService {
             //记录预约记录
             OrderInfo orderInfo = new OrderInfo();
             orderInfo.setPatientId(patientId);
-            orderInfo.setScheduleId(Long.parseLong(hosScheduleId));
+            orderInfo.setScheduleId(1L);
             int number = schedule.getReservedNumber().intValue() - schedule.getAvailableNumber().intValue();
             orderInfo.setNumber(number);
             orderInfo.setAmount(new BigDecimal(amount));
@@ -84,7 +84,7 @@ public class HospitalServiceImpl implements HospitalService {
             //预约号序
             resultMap.put("number", number);
             //取号时间
-            resultMap.put("fetchTime", reserveDate + "09:00前");;
+            resultMap.put("fetchTime", reserveDate + "09:00前");
             //取号地址
             resultMap.put("fetchAddress", "一层114窗口");;
             //排班可预约数
@@ -108,7 +108,6 @@ public class HospitalServiceImpl implements HospitalService {
         }
         //已支付
         orderInfo.setOrderStatus(1);
-        orderInfo.setPayTime(new Date());
         orderInfoMapper.updateById(orderInfo);
     }
 
